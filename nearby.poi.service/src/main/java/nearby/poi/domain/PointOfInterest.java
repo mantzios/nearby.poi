@@ -5,6 +5,14 @@ public class PointOfInterest {
     private String name;
     private LatLongDTO position;
 
+    public PointOfInterest() {
+    }
+
+    public PointOfInterest(String name, LatLongDTO position) {
+        this.name = name;
+        this.position = position;
+    }
+
     public String getName() {
         return name;
     }

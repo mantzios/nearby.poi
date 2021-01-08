@@ -1,24 +1,48 @@
 package nearby.poi.service;
 
 import nearby.poi.domain.LatLongDTO;
-import nearby.poi.domain.MetricAlgorithmEnum;
+import nearby.poi.domain.POIDistance;
 import nearby.poi.domain.PointOfInterest;
 
+import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 
 public class PointOfInterestService {
 
+    /**
+     * Returns the closest point of interest based on current position
+     *
+     * @param pointOfInterests    the list of point of interests
+     * @param currentPosition     the current position
+     * @param distanceMetricInterface a way to specify how to measure the distance between two points
+     * @return the closest point of interest
+     */
+    public PointOfInterest findClosestPointOfInterest(List<PointOfInterest> pointOfInterests, LatLongDTO currentPosition, DistanceMetricInterface distanceMetricInterface) {
+        return getClosestPointOfInterest(pointOfInterests, currentPosition, distanceMetricInterface);
+    }
 
     /**
      * Returns the closest point of interest based on current position
+     * By default it uses the haversine metric
      * @param pointOfInterests the list of point of interests
      * @param currentPosition the current position
-     * @param metricAlgorithmEnum
      * @return the closest point of interest
      */
-    public PointOfInterest findClosestPointOfInterest(List<PointOfInterest> pointOfInterests, LatLongDTO currentPosition, MetricAlgorithmEnum metricAlgorithmEnum){
+    public PointOfInterest findClosestPointOfInterest(List<PointOfInterest> pointOfInterests, LatLongDTO currentPosition) {
+        return getClosestPointOfInterest(pointOfInterests, currentPosition, new HavershineMetric());
+    }
 
-        return new PointOfInterest();
+    private PointOfInterest getClosestPointOfInterest(List<PointOfInterest> pointOfInterests, LatLongDTO currentPosition, DistanceMetricInterface distanceMetricInterface) {
+        return pointOfInterests
+                .stream()
+                .map((pointOfInterest) -> {
+                    BigDecimal distanceFromCurrentPosition = distanceMetricInterface.distance(pointOfInterest.getPosition(), currentPosition);
+                    return new POIDistance(pointOfInterest, distanceFromCurrentPosition);
+                })
+                .min(Comparator.comparing(POIDistance::getDistanceFromCurrentPosition))
+                .orElseThrow(RuntimeException::new)
+                .getPointOfInterest();
     }
 
 }
