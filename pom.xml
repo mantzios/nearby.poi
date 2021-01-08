@@ -28,7 +28,7 @@
     </build>
 
     <modules>
-        <module>nearby.poi.service</module>
+        <module>nearby.poi.domain</module>
     </modules>
 
     <dependencyManagement>
