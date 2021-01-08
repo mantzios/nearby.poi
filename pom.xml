@@ -29,6 +29,7 @@
 
     <modules>
         <module>nearby.poi.domain</module>
+        <module>nearby.poi.repository</module>
     </modules>
 
     <dependencyManagement>
