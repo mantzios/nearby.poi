@@ -8,7 +8,7 @@ public class HavershineMetric implements DistanceMetricInterface {
 
     private static final int EARTH_RADIUS = 6371; // Approx Earth radius in KM
 
-    public static double haversin(double val) {
+    public static double haversine(double val) {
         return Math.pow(Math.sin(val / 2), 2);
     }
 
@@ -20,7 +20,7 @@ public class HavershineMetric implements DistanceMetricInterface {
         double pointFromLatitude = Math.toRadians(pointFrom.getLatitude().doubleValue());
         double pointEndLatitude = Math.toRadians(pointTo.getLatitude().doubleValue());
 
-        double a = haversin(latitudeDifference) + Math.cos(pointFromLatitude) * Math.cos(pointEndLatitude) * haversin(longitudeDifference);
+        double a = haversine(latitudeDifference) + Math.cos(pointFromLatitude) * Math.cos(pointEndLatitude) * haversine(longitudeDifference);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
         return BigDecimal.valueOf(EARTH_RADIUS * c); // <-- d
