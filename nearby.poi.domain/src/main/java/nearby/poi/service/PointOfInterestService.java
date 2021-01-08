@@ -3,6 +3,7 @@ package nearby.poi.service;
 import nearby.poi.domain.LatLongDTO;
 import nearby.poi.domain.POIDistance;
 import nearby.poi.domain.PointOfInterest;
+import nearby.poi.interfaces.DistanceMetricInterface;
 
 import java.math.BigDecimal;
 import java.util.Comparator;

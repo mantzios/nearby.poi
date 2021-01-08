@@ -1,4 +1,4 @@
-package nearby.poi.service;
+package nearby.poi.interfaces;
 
 import nearby.poi.domain.LatLongDTO;
 

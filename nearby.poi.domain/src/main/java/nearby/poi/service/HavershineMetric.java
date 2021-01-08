@@ -1,6 +1,7 @@
 package nearby.poi.service;
 
 import nearby.poi.domain.LatLongDTO;
+import nearby.poi.interfaces.DistanceMetricInterface;
 
 import java.math.BigDecimal;
 
