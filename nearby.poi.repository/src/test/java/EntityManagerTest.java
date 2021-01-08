@@ -1,5 +1,7 @@
 import nearby.poi.repository.jpa.PointOfInterestEntity;
+import org.hibernate.cfg.AvailableSettings;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -8,29 +10,43 @@ import org.locationtech.jts.geom.Point;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.util.Properties;
 
 public class EntityManagerTest {
 
-    @Test
-    public void test() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("poiPU");
-        EntityManager entityManager = emf.createEntityManager();
-        PointOfInterestEntity entity = new PointOfInterestEntity();
+    private static EntityManagerFactory entityManagerFactory;
+    private static GeometryFactory geometryFactory;
 
-        entityManager.getTransaction().begin();
-        GeometryFactory gf = new GeometryFactory();
-        Point point = gf.createPoint( new Coordinate(23.444,-53.000) );
+    @BeforeAll
+    static void init(){
+        Properties generateSchemaProperties = new Properties();
+        generateSchemaProperties.setProperty(AvailableSettings.HBM2DDL_AUTO, "create");
+        entityManagerFactory = Persistence.createEntityManagerFactory("poiPU",generateSchemaProperties);
+        geometryFactory = new GeometryFactory();
+    }
+
+    @Test
+    public void importData() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            for (POIEnum poi : POIEnum.values()) {
+                PointOfInterestEntity pointOfInterestEntity = createPOI(poi.getLatitude(), poi.getLongitude(), poi.getName());
+                entityManager.persist(pointOfInterestEntity);
+            }
+            entityManager.getTransaction().commit();
+        }catch(Exception e){
+            Assertions.fail();
+        }
+    }
+
+
+    private PointOfInterestEntity createPOI(double latitude,double longitude,String name){
+        PointOfInterestEntity entity = new PointOfInterestEntity();
+        Point point = geometryFactory.createPoint( new Coordinate(latitude,longitude) );
         point.setSRID(4326);
         entity.setPointLocation(point);
-        entity.setPointOfInterestName("test");
-        entityManager.persist(entity);
-        entityManager.getTransaction().commit();
-
-
-        PointOfInterestEntity p1 = entityManager.createQuery("select t from PointOfInterestEntity t ",
-                PointOfInterestEntity.class)
-                .getResultList().get(0);
-        Assertions.assertEquals(p1.getPointLocation().getCoordinate().getX(),23.444);
-        Assertions.assertEquals(p1.getPointLocation().getCoordinate().getY(),-53.000);
+        entity.setPointOfInterestName(name);
+        return entity;
     }
 }
