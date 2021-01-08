@@ -28,7 +28,7 @@ public class PointOfInterestServiceTest {
     @Test
     public void testFindingClosestPointOfInterest() {
         PointOfInterestService pointOfInterestService = new PointOfInterestService();
-        PointOfInterest closestPointOfInterest = pointOfInterestService.findClosestPointOfInterest(pointOfInterests, currentPosition, new HavershineMetric());
+        PointOfInterest closestPointOfInterest = pointOfInterestService.findClosestPointOfInterest(pointOfInterests, currentPosition);
         Assertions.assertNotNull(closestPointOfInterest);
         Assertions.assertEquals("thessaloniki",closestPointOfInterest.getName());
     }
