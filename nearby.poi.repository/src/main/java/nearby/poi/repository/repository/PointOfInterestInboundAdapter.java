@@ -5,12 +5,14 @@ import nearby.poi.interfaces.PointOfInterestRepository;
 import nearby.poi.repository.jpa.PointOfInterestEntity;
 import nearby.poi.repository.mapper.PointOfInterestMapper;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Stateless
 public class PointOfInterestInboundAdapter implements PointOfInterestRepository {
 
     @Inject
