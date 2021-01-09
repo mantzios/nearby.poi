@@ -4,12 +4,27 @@ import nearby.poi.domain.LatLongDTO;
 import nearby.poi.domain.POIDistance;
 import nearby.poi.domain.PointOfInterest;
 import nearby.poi.interfaces.DistanceMetricInterface;
+import nearby.poi.interfaces.PointOfInterestRepository;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 
-public class PointOfInterestService {
+public class PointOfInterestService implements Serializable {
+
+    private PointOfInterestRepository pointOfInterestRepository;
+
+    public PointOfInterestService(PointOfInterestRepository pointOfInterestRepository) {
+        this.pointOfInterestRepository = pointOfInterestRepository;
+    }
+
+    public PointOfInterestService() {
+    }
+
+    public List<PointOfInterest> getAllPointOfInterest(){
+        return pointOfInterestRepository.findAllPointsOfInterest();
+    }
 
     /**
      * Returns the closest point of interest based on current position
