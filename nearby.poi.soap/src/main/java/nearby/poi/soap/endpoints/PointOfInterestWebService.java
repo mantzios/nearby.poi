@@ -3,7 +3,7 @@ package nearby.poi.soap.endpoints;
 import nearby.poi.domain.LatLongDTO;
 import nearby.poi.domain.PointOfInterest;
 import nearby.poi.service.PointOfInterestService;
-import nearby.poi.soap.cache.POICache;
+import nearby.poi.soap.cache.PointOfInterestCache;
 import nearby.poi.soap.dto.PointOfInterestDTO;
 import nearby.poi.soap.interfaces.PointOfInterestWebServiceInterface;
 
@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 public class PointOfInterestWebService implements PointOfInterestWebServiceInterface {
 
     @Inject
-    private POICache poiCache;
+    private PointOfInterestCache pointOfInterestCache;
 
     @Inject
     private PointOfInterestService pointOfInterestService;
@@ -24,7 +24,7 @@ public class PointOfInterestWebService implements PointOfInterestWebServiceInter
     @Override
     @WebMethod
     public PointOfInterestDTO getClosestPointOfInterest(float latitude, float longitude) {
-        PointOfInterest closestPointOfInterest = pointOfInterestService.findClosestPointOfInterest(poiCache.getPointOfInterestList(),
+        PointOfInterest closestPointOfInterest = pointOfInterestService.findClosestPointOfInterest(pointOfInterestCache.getPointOfInterestList(),
                 new LatLongDTO(BigDecimal.valueOf(latitude), BigDecimal.valueOf(longitude)));
         PointOfInterestDTO pointOfInterestDTO = new PointOfInterestDTO();
         pointOfInterestDTO.setName(closestPointOfInterest.getName());

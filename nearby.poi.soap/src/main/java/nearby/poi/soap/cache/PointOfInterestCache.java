@@ -11,7 +11,7 @@ import java.util.List;
 @Startup
 @Singleton
 @ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
-public class POICache {
+public class PointOfInterestCache {
 
     private List<PointOfInterest> pointOfInterestList;
 
