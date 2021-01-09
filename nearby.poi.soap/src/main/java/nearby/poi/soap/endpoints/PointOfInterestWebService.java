@@ -29,6 +29,7 @@ public class PointOfInterestWebService implements PointOfInterestWebServiceInter
     @Override
     @WebMethod
     public PointOfInterestDTO getClosestPointOfInterest(float latitude, float longitude) {
+        if(latitude == 0 || longitude==0) throw new RuntimeException("Lat Long cannot be zero");
         PointOfInterest closestPointOfInterest = null;
         try {
             closestPointOfInterest = pointOfInterestService.findClosestPointOfInterest(pointOfInterestCache.getPointOfInterestList(),
