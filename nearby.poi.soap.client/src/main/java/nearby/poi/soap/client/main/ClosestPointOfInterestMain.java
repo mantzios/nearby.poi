@@ -6,6 +6,7 @@ import nearby.poi.soap.interfaces.PointOfInterestDTO;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 public class ClosestPointOfInterestMain {
 
@@ -16,8 +17,11 @@ public class ClosestPointOfInterestMain {
                 = new PointOfInterestWebServiceService(url);
         PointOfInterestWebServiceInterface employeeServiceProxy = employeeService_Service.getPointOfInterestWebServicePort();
 
-        PointOfInterestDTO closestPointOfInterest = employeeServiceProxy.getClosestPointOfInterest(31.2f, 31.2f);
+        PointOfInterestDTO closestPointOfInterest = employeeServiceProxy.getClosestPointOfInterest(37.955654f , 23.698765f);
         System.out.println(closestPointOfInterest.getName());
+
+        List<PointOfInterestDTO> pointOfInterestsGreaterThanCount = employeeServiceProxy.getPointOfInterestsGreaterThanCount(2);
+        pointOfInterestsGreaterThanCount.forEach(point-> System.out.println(point.getName()));
     }
 
 }

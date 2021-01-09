@@ -26,6 +26,8 @@ public class ObjectFactory {
 
     private final static QName _GetClosestPointOfInterestResponse_QNAME = new QName("http://interfaces.soap.poi.nearby/", "getClosestPointOfInterestResponse");
     private final static QName _GetClosestPointOfInterest_QNAME = new QName("http://interfaces.soap.poi.nearby/", "getClosestPointOfInterest");
+    private final static QName _GetPointOfInterestsGreaterThanCountResponse_QNAME = new QName("http://interfaces.soap.poi.nearby/", "getPointOfInterestsGreaterThanCountResponse");
+    private final static QName _GetPointOfInterestsGreaterThanCount_QNAME = new QName("http://interfaces.soap.poi.nearby/", "getPointOfInterestsGreaterThanCount");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: nearby.poi.soap.interfaces
@@ -40,6 +42,22 @@ public class ObjectFactory {
      */
     public GetClosestPointOfInterestResponse createGetClosestPointOfInterestResponse() {
         return new GetClosestPointOfInterestResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetPointOfInterestsGreaterThanCount }
+     * 
+     */
+    public GetPointOfInterestsGreaterThanCount createGetPointOfInterestsGreaterThanCount() {
+        return new GetPointOfInterestsGreaterThanCount();
+    }
+
+    /**
+     * Create an instance of {@link GetPointOfInterestsGreaterThanCountResponse }
+     * 
+     */
+    public GetPointOfInterestsGreaterThanCountResponse createGetPointOfInterestsGreaterThanCountResponse() {
+        return new GetPointOfInterestsGreaterThanCountResponse();
     }
 
     /**
@@ -74,6 +92,24 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://interfaces.soap.poi.nearby/", name = "getClosestPointOfInterest")
     public JAXBElement<GetClosestPointOfInterest> createGetClosestPointOfInterest(GetClosestPointOfInterest value) {
         return new JAXBElement<GetClosestPointOfInterest>(_GetClosestPointOfInterest_QNAME, GetClosestPointOfInterest.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetPointOfInterestsGreaterThanCountResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://interfaces.soap.poi.nearby/", name = "getPointOfInterestsGreaterThanCountResponse")
+    public JAXBElement<GetPointOfInterestsGreaterThanCountResponse> createGetPointOfInterestsGreaterThanCountResponse(GetPointOfInterestsGreaterThanCountResponse value) {
+        return new JAXBElement<GetPointOfInterestsGreaterThanCountResponse>(_GetPointOfInterestsGreaterThanCountResponse_QNAME, GetPointOfInterestsGreaterThanCountResponse.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetPointOfInterestsGreaterThanCount }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://interfaces.soap.poi.nearby/", name = "getPointOfInterestsGreaterThanCount")
+    public JAXBElement<GetPointOfInterestsGreaterThanCount> createGetPointOfInterestsGreaterThanCount(GetPointOfInterestsGreaterThanCount value) {
+        return new JAXBElement<GetPointOfInterestsGreaterThanCount>(_GetPointOfInterestsGreaterThanCount_QNAME, GetPointOfInterestsGreaterThanCount.class, null, value);
     }
 
 }

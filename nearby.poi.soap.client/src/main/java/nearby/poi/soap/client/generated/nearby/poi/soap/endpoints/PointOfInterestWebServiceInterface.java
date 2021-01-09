@@ -1,6 +1,7 @@
 
 package nearby.poi.soap.endpoints;
 
+import java.util.List;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
@@ -41,5 +42,19 @@ public interface PointOfInterestWebServiceInterface {
         float arg0,
         @WebParam(name = "arg1", targetNamespace = "")
         float arg1);
+
+    /**
+     * 
+     * @param arg0
+     * @return
+     *     returns java.util.List<nearby.poi.soap.interfaces.PointOfInterestDTO>
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "getPointOfInterestsGreaterThanCount", targetNamespace = "http://interfaces.soap.poi.nearby/", className = "nearby.poi.soap.interfaces.GetPointOfInterestsGreaterThanCount")
+    @ResponseWrapper(localName = "getPointOfInterestsGreaterThanCountResponse", targetNamespace = "http://interfaces.soap.poi.nearby/", className = "nearby.poi.soap.interfaces.GetPointOfInterestsGreaterThanCountResponse")
+    public List<PointOfInterestDTO> getPointOfInterestsGreaterThanCount(
+        @WebParam(name = "arg0", targetNamespace = "")
+        int arg0);
 
 }
