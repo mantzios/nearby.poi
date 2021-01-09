@@ -62,6 +62,6 @@ FROM wildflysetup
 #echo "=> Restarting WildFly"
 # Set the default command to run on boot
 # This will boot WildFly in the standalone mode and bind to all nearby.poi.soap.dto.interfaces
-COPY --from=build /home/app/nearby.poi.soap/target/nearby.poi.soap-1.0-SNAPSHOT.war $DEPLOYMENT_DIR
+COPY --from=build /home/app/nearby.poi.soap/target/nearby.poi.api.war $DEPLOYMENT_DIR
 CMD ["/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0"]
 

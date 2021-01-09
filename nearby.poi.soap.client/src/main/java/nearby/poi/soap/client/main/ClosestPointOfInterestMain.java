@@ -11,7 +11,7 @@ import java.util.List;
 public class ClosestPointOfInterestMain {
 
     public static void main(String[] args) throws MalformedURLException {
-        URL url = new URL("http://localhost:8080/nearby.poi.soap-1.0-SNAPSHOT/PointOfInterestWebService?wsdl");
+        URL url = new URL("http://localhost:8080/nearby.poi.api/PointOfInterestWebService?wsdl");
 
         PointOfInterestWebServiceService employeeService_Service
                 = new PointOfInterestWebServiceService(url);
