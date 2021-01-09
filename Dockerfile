@@ -1,10 +1,5 @@
-#Build Stage
-FROM maven:3.6.0-jdk-8-slim as build
-COPY . /home/app/
-RUN mvn -f /home/app/pom.xml clean install -DskipTests
-
-#fdfd
-FROM jboss/wildfly:latest
+#Wildfly Setup
+FROM jboss/wildfly:latest as wildflysetup
 
 # Appserver
 ENV WILDFLY_USER admin
@@ -14,7 +9,7 @@ ENV WILDFLY_PASS adminPassword
 ENV DB_NAME poi
 ENV DB_USER root
 ENV DB_PASS my-secret-pw
-ENV DB_URI 192.168.1.154:3306
+ENV DB_URI mysql:3306
 
 ENV MYSQL_VERSION 8.0.22
 ENV JBOSS_CLI /opt/jboss/wildfly/bin/jboss-cli.sh
@@ -57,6 +52,13 @@ RUN echo "=> Starting WildFly server" && \
 # Expose http and admin ports
 EXPOSE 8080 9990
 
+
+#Build Stage
+FROM maven:3.6.0-jdk-8-slim as build
+COPY . /home/app/
+RUN mvn -f /home/app/pom.xml clean install -DskipTests
+
+FROM wildflysetup
 #echo "=> Restarting WildFly"
 # Set the default command to run on boot
 # This will boot WildFly in the standalone mode and bind to all nearby.poi.soap.dto.interfaces

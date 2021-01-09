@@ -1,6 +1,7 @@
 import nearby.poi.domain.LatLongDTO;
 import nearby.poi.domain.MetricAlgorithmEnum;
 import nearby.poi.domain.PointOfInterest;
+import nearby.poi.exceptions.PointOfInterestNotFoundException;
 import nearby.poi.service.HavershineMetric;
 import nearby.poi.service.PointOfInterestService;
 import org.junit.jupiter.api.Assertions;
@@ -26,10 +27,12 @@ public class PointOfInterestServiceTest {
     }
 
     @Test
-    public void testFindingClosestPointOfInterest() {
+    public void testFindingClosestPointOfInterest() throws PointOfInterestNotFoundException {
         PointOfInterestService pointOfInterestService = new PointOfInterestService();
         PointOfInterest closestPointOfInterest = pointOfInterestService.findClosestPointOfInterest(pointOfInterests, currentPosition);
         Assertions.assertNotNull(closestPointOfInterest);
         Assertions.assertEquals("thessaloniki",closestPointOfInterest.getName());
     }
+
+
 }

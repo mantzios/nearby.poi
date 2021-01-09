@@ -3,6 +3,8 @@ package nearby.poi.service;
 import nearby.poi.domain.LatLongDTO;
 import nearby.poi.domain.POIDistance;
 import nearby.poi.domain.PointOfInterest;
+import nearby.poi.exceptions.PointOfInterestNotFoundException;
+import nearby.poi.exceptions.ValidationException;
 import nearby.poi.interfaces.DistanceMetricInterface;
 import nearby.poi.interfaces.PointOfInterestRepository;
 
@@ -34,7 +36,8 @@ public class PointOfInterestService implements Serializable {
      * @param distanceMetricInterface a way to specify how to measure the distance between two points
      * @return the closest point of interest
      */
-    public PointOfInterest findClosestPointOfInterest(List<PointOfInterest> pointOfInterests, LatLongDTO currentPosition, DistanceMetricInterface distanceMetricInterface) {
+    public PointOfInterest findClosestPointOfInterest(List<PointOfInterest> pointOfInterests, LatLongDTO currentPosition,
+                                                      DistanceMetricInterface distanceMetricInterface) throws PointOfInterestNotFoundException {
         return getClosestPointOfInterest(pointOfInterests, currentPosition, distanceMetricInterface);
     }
 
@@ -45,11 +48,16 @@ public class PointOfInterestService implements Serializable {
      * @param currentPosition the current position
      * @return the closest point of interest
      */
-    public PointOfInterest findClosestPointOfInterest(List<PointOfInterest> pointOfInterests, LatLongDTO currentPosition) {
+    public PointOfInterest findClosestPointOfInterest(List<PointOfInterest> pointOfInterests, LatLongDTO currentPosition)
+            throws PointOfInterestNotFoundException {
         return getClosestPointOfInterest(pointOfInterests, currentPosition, new HavershineMetric());
     }
 
-    private PointOfInterest getClosestPointOfInterest(List<PointOfInterest> pointOfInterests, LatLongDTO currentPosition, DistanceMetricInterface distanceMetricInterface) {
+    private PointOfInterest getClosestPointOfInterest(List<PointOfInterest> pointOfInterests, LatLongDTO currentPosition,
+                                                      DistanceMetricInterface distanceMetricInterface) throws PointOfInterestNotFoundException, ValidationException {
+        if(pointOfInterests == null) throw new ValidationException("point of interests cannot be null");
+        if(currentPosition == null) throw new ValidationException("current position cannot be null");
+        if(pointOfInterests.isEmpty()) throw new PointOfInterestNotFoundException("Point not found");
         return pointOfInterests
                 .stream()
                 .map((pointOfInterest) -> {

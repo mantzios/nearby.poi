@@ -2,6 +2,7 @@ package nearby.poi.soap.endpoints;
 
 import nearby.poi.domain.LatLongDTO;
 import nearby.poi.domain.PointOfInterest;
+import nearby.poi.exceptions.PointOfInterestNotFoundException;
 import nearby.poi.service.PointOfInterestService;
 import nearby.poi.soap.cache.PointOfInterestCache;
 import nearby.poi.soap.dto.PointOfInterestDTO;
@@ -28,8 +29,13 @@ public class PointOfInterestWebService implements PointOfInterestWebServiceInter
     @Override
     @WebMethod
     public PointOfInterestDTO getClosestPointOfInterest(float latitude, float longitude) {
-        PointOfInterest closestPointOfInterest = pointOfInterestService.findClosestPointOfInterest(pointOfInterestCache.getPointOfInterestList(),
-                new LatLongDTO(BigDecimal.valueOf(latitude), BigDecimal.valueOf(longitude)));
+        PointOfInterest closestPointOfInterest = null;
+        try {
+            closestPointOfInterest = pointOfInterestService.findClosestPointOfInterest(pointOfInterestCache.getPointOfInterestList(),
+                    new LatLongDTO(BigDecimal.valueOf(latitude), BigDecimal.valueOf(longitude)));
+        } catch (PointOfInterestNotFoundException e) {
+            return new PointOfInterestDTO();
+        }
         pointOfInterestCache.increaseCounterOfNearbyPointOfInterest(closestPointOfInterest);
         return PointOfInterestMapper.convert(closestPointOfInterest);
     }
