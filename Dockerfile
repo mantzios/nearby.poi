@@ -56,7 +56,7 @@ EXPOSE 8080 9990
 #Build Stage
 FROM maven:3.6.0-jdk-8-slim as build
 COPY . /home/app/
-RUN mvn -f /home/app/pom.xml clean install -DskipTests
+RUN mvn -f /home/app/pom.xml clean install
 
 FROM wildflysetup
 #echo "=> Restarting WildFly"
