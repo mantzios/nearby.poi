@@ -30,6 +30,8 @@
     <modules>
         <module>nearby.poi.domain</module>
         <module>nearby.poi.repository</module>
+        <module>nearby.poi.soap</module>
+        <module>nearby.poi.soap.client</module>
     </modules>
 
     <dependencyManagement>

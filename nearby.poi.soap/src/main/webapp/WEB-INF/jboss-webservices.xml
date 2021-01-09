@@ -1,0 +1,13 @@
+<webservices version="1.2"
+             xmlns="http://www.jboss.com/xml/ns/javaee"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.jboss.com/xml/ns/javaee">
+    <property>
+        <name>wsdl.soapAddress.rewrite.wsdl-host</name>
+        <value>localhost</value>
+    </property>
+    <property>
+        <name>wsdl.soapAddress.rewrite.wsdl-port</name>
+        <value>8080</value>
+    </property>
+</webservices>
