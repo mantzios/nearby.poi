@@ -16,19 +16,19 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>5.4.27.Final</version>
+            <version>${hibernate.version}</version>
         </dependency>
 
         <dependency>
             <groupId>javax.persistence</groupId>
             <artifactId>javax.persistence-api</artifactId>
-            <version>2.2</version>
+            <version>${javax.persistence.api.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-spatial</artifactId>
-            <version>5.4.27.Final</version>
+            <version>${hibernate.spatial.version}</version>
         </dependency>
 
         <dependency>
@@ -40,14 +40,15 @@
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
-            <version>8.0</version>
+            <version>${java.ee.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.22</version>
+            <version>${mysql.connector.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
