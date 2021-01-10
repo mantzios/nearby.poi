@@ -10,18 +10,24 @@ import nearby.poi.interfaces.PointOfInterestRepository;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class PointOfInterestService implements Serializable {
 
-    private PointOfInterestRepository pointOfInterestRepository;
+    private final PointOfInterestRepository pointOfInterestRepository;
+    private final ExecutorService executorService;
+    private Integer numberOfChunks;
 
-    public PointOfInterestService(PointOfInterestRepository pointOfInterestRepository) {
+    public PointOfInterestService(PointOfInterestRepository pointOfInterestRepository, ExecutorService executorService, Integer numberOfChunks) {
         this.pointOfInterestRepository = pointOfInterestRepository;
-    }
-
-    public PointOfInterestService() {
+        this.executorService = executorService;
+        this.numberOfChunks = numberOfChunks;
     }
 
     public List<PointOfInterest> getAllPointOfInterest(){
@@ -38,7 +44,7 @@ public class PointOfInterestService implements Serializable {
      */
     public PointOfInterest findClosestPointOfInterest(List<PointOfInterest> pointOfInterests, LatLongDTO currentPosition,
                                                       DistanceMetricInterface distanceMetricInterface) throws PointOfInterestNotFoundException {
-        return getClosestPointOfInterest(pointOfInterests, currentPosition, distanceMetricInterface);
+        return getClosestPointOfInterestAsynchronous(pointOfInterests, currentPosition, distanceMetricInterface);
     }
 
     /**
@@ -50,14 +56,13 @@ public class PointOfInterestService implements Serializable {
      */
     public PointOfInterest findClosestPointOfInterest(List<PointOfInterest> pointOfInterests, LatLongDTO currentPosition)
             throws PointOfInterestNotFoundException {
-        return getClosestPointOfInterest(pointOfInterests, currentPosition, new HavershineMetric());
+        return getClosestPointOfInterestAsynchronous(pointOfInterests, currentPosition, new HavershineMetric());
     }
 
     private PointOfInterest getClosestPointOfInterest(List<PointOfInterest> pointOfInterests, LatLongDTO currentPosition,
-                                                      DistanceMetricInterface distanceMetricInterface) throws PointOfInterestNotFoundException, ValidationException {
+                                                      DistanceMetricInterface distanceMetricInterface) throws ValidationException {
         if(pointOfInterests == null) throw new ValidationException("point of interests cannot be null");
         if(currentPosition == null) throw new ValidationException("current position cannot be null");
-        if(pointOfInterests.isEmpty()) throw new PointOfInterestNotFoundException("Point not found");
         return pointOfInterests
                 .stream()
                 .map((pointOfInterest) -> {
@@ -69,4 +74,38 @@ public class PointOfInterestService implements Serializable {
                 .getPointOfInterest();
     }
 
+    private PointOfInterest getClosestPointOfInterestAsynchronous(List<PointOfInterest> pointOfInterests, LatLongDTO currentPosition,
+                                                                  DistanceMetricInterface distanceMetricInterface) throws PointOfInterestNotFoundException {
+        if(pointOfInterests == null || pointOfInterests.size() == 0) throw new PointOfInterestNotFoundException("Points of interests are empty");
+        int sizeOfWholeList = pointOfInterests.size();
+        List<CompletableFuture<PointOfInterest>> listOfCompletableFutures = new ArrayList<>();
+        int chunk = sizeOfWholeList / numberOfChunks;
+        runAsyncComputationOfClosestPointOfInterest(pointOfInterests, currentPosition, distanceMetricInterface, sizeOfWholeList, listOfCompletableFutures, chunk);
+        CompletableFuture<Void> joinedOfCompletableFuture = CompletableFuture.allOf(listOfCompletableFutures.toArray(new CompletableFuture[listOfCompletableFutures.size()]));
+        joinedOfCompletableFuture.join(); // blocks until all the computation has been completed
+        List<PointOfInterest> closestPointOfInterests = new ArrayList<>();
+        listOfCompletableFutures.forEach(coml -> coml.thenAccept(closestPointOfInterests::add));
+        return getClosestPointOfInterest(closestPointOfInterests, currentPosition,distanceMetricInterface);
+    }
+
+    private void runAsyncComputationOfClosestPointOfInterest(List<PointOfInterest> pointOfInterests, LatLongDTO currentPosition, DistanceMetricInterface distanceMetricInterface, int sizeOfWholeList, List<CompletableFuture<PointOfInterest>> listOfCompletableFutures, int chunk) {
+        for(int i=0; i< numberOfChunks; i++){
+            int startInclusive = chunk * i;
+            int endExclusive = i == 2 ? sizeOfWholeList : chunk * (i+1);
+            List<PointOfInterest> chunkedList = IntStream.range(startInclusive, endExclusive)
+                    .mapToObj(pointOfInterests::get)
+                    .collect(Collectors.toList());
+            listOfCompletableFutures.add(CompletableFuture.supplyAsync(
+                    ()-> getClosestPointOfInterest(chunkedList,currentPosition,distanceMetricInterface),
+                    executorService));
+        }
+    }
+
+    public Integer getNumberOfChunks() {
+        return numberOfChunks;
+    }
+
+    public void setNumberOfChunks(Integer numberOfChunks) {
+        this.numberOfChunks = numberOfChunks;
+    }
 }
