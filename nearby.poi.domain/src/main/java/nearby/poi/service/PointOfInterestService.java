@@ -44,6 +44,7 @@ public class PointOfInterestService implements Serializable {
      */
     public PointOfInterest findClosestPointOfInterest(List<PointOfInterest> pointOfInterests, LatLongDTO currentPosition,
                                                       DistanceMetricInterface distanceMetricInterface) throws PointOfInterestNotFoundException {
+        validateLatLong(currentPosition);
         return getClosestPointOfInterestAsynchronous(pointOfInterests, currentPosition, distanceMetricInterface);
     }
 
@@ -56,7 +57,14 @@ public class PointOfInterestService implements Serializable {
      */
     public PointOfInterest findClosestPointOfInterest(List<PointOfInterest> pointOfInterests, LatLongDTO currentPosition)
             throws PointOfInterestNotFoundException {
+        validateLatLong(currentPosition);
         return getClosestPointOfInterestAsynchronous(pointOfInterests, currentPosition, new HavershineMetric());
+    }
+
+    private void validateLatLong(LatLongDTO currentPosition) {
+        if(currentPosition == null) throw new ValidationException("Current Position cannot be null");
+        if(currentPosition.getLatitude() == null) throw new ValidationException("Latitude cannot be null");
+        if(currentPosition.getLongitude() == null) throw new  ValidationException("Longitude cannot be null");
     }
 
     private PointOfInterest getClosestPointOfInterest(List<PointOfInterest> pointOfInterests, LatLongDTO currentPosition,
