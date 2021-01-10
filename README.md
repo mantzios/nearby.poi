@@ -1,6 +1,6 @@
 # Nearby Point of Interest App
 
-###Requirements 
+### Requirements 
 
 In order to run this application you would need to have installed 
 docker and docker compose. 
@@ -8,9 +8,9 @@ docker and docker compose.
 Entry script to run is: **docker compose up -d** from inside 
 the folder which docker-compose.yaml exists
 
-###Infrastructure
+### Infrastructure
 
-The application is a Java EE web app application that runs 
+The application is a Java EE 8 web app application that runs 
 in Wildfly (*WildFly Full 21.0.2.Final*)
 
 The database is a MySQL database (*MySQL Server 8.0.22*)
