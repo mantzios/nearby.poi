@@ -56,6 +56,7 @@ EXPOSE 8080 9990
 #Build Stage
 FROM maven:3.6.0-jdk-8-slim as build
 COPY . /home/app/
+RUN chmod 777 /home/app/wait-for-it.sh
 RUN mvn -f /home/app/pom.xml clean install
 
 FROM wildflysetup
