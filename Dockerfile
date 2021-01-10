@@ -59,9 +59,8 @@ COPY . /home/app/
 RUN mvn -f /home/app/pom.xml clean install
 
 FROM wildflysetup
-#echo "=> Restarting WildFly"
-# Set the default command to run on boot
-# This will boot WildFly in the standalone mode and bind to all nearby.poi.soap.dto.interfaces
+COPY --from=build /home/app/wait-for-it.sh .
 COPY --from=build /home/app/nearby.poi.soap/target/nearby.poi.api.war $DEPLOYMENT_DIR
-CMD ["/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0"]
+CMD ["./wait-for-it.sh" , "mysql:3306" , "--strict" , "--timeout=0" , "--" , "/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0"]
+
 
