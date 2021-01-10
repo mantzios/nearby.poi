@@ -17,6 +17,7 @@ public class PointOfInterestCache {
 
     private List<PointOfInterest> pointOfInterestList;
     private Map<PointOfInterest,Integer> countOfNearbyPointOfInterests;
+    private int pointOfInterestListSize;
 
     @Inject
     private PointOfInterestService pointOfInterestService;
@@ -25,6 +26,7 @@ public class PointOfInterestCache {
     public void initialize(){
         pointOfInterestList = pointOfInterestService.getAllPointOfInterest();
         countOfNearbyPointOfInterests = new HashMap<>();
+        pointOfInterestListSize = pointOfInterestList.size();
     }
 
     @Lock(LockType.READ)
@@ -46,7 +48,8 @@ public class PointOfInterestCache {
         return countOfNearbyPointOfInterests;
     }
 
-    public void setCountOfNearbyPointOfInterests(Map<PointOfInterest, Integer> countOfNearbyPointOfInterests) {
-        this.countOfNearbyPointOfInterests = countOfNearbyPointOfInterests;
+    @Lock(LockType.WRITE)
+    public int getPointOfInterestListSize() {
+        return pointOfInterestListSize;
     }
 }
