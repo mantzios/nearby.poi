@@ -52,16 +52,9 @@ RUN echo "=> Starting WildFly server" && \
 # Expose http and admin ports
 EXPOSE 8080 9990
 
+ADD nearby.poi.soap/target/nearby.poi.api.war $DEPLOYMENT_DIR
+ADD wait-for-it.sh .
 
-#Build Stage
-FROM maven:3.6.0-jdk-8-slim as build
-COPY . /home/app/
-RUN chmod 777 /home/app/wait-for-it.sh
-RUN mvn -f /home/app/pom.xml clean install
-
-FROM wildflysetup
-COPY --from=build /home/app/wait-for-it.sh .
-COPY --from=build /home/app/nearby.poi.soap/target/nearby.poi.api.war $DEPLOYMENT_DIR
 CMD ["./wait-for-it.sh" , "mysql:3306" , "--strict" , "--timeout=0" , "--" , "/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0"]
 
 
